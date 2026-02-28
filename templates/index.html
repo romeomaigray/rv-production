@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ config.name }} — Luxury Cinematography</title>
+  <meta name="description" content="{{ config.tagline }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>" />
+</head>
+
+<body>
+
+  <!-- ═══════════════════════════════ NAV ════════════════════════════════ -->
+  <nav id="nav">
+    <a href="#hero" class="nav-logo-link">
+      <img id="nav-logo-img" src="" alt="{{ config.name }}" style="display:none; height:44px; object-fit:contain;" />
+      <span id="nav-logo-text" class="nav-logo-text">
+        R<span class="gold">&amp;</span>V Production
+      </span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#portfolio">Work</a></li>
+      <li><a href="#store-section">Shop</a></li>
+      <li><a href="#about">About</a></li>
+      <li><button class="nav-cta" onclick="openContactModal()">Contact</button></li>
+    </ul>
+  </nav>
+
+  <!-- ══════════════════════════════ HERO ════════════════════════════════ -->
+  <section id="hero" {% if hero_vid %} class="has-video" {% endif %}>
+    <video id="hero-video" autoplay muted loop playsinline preload="auto" {% if not hero_vid %}style="display:none" {%
+      endif %}>
+      {% if hero_vid %}
+      <source src="{{ url_for('serve_video', category='hero', filename=hero_vid) }}" type="video/mp4" />
+      {% endif %}
+    </video>
+    <div id="hero-overlay"></div>
+    <div class="hero-logo-wrap">
+      <img id="hero-logo-img" src="" alt="{{ config.name }}" style="display:none" />
+      <div id="hero-logo-fallback" class="hero-logo-fallback">
+        <span class="hero-logo-text">R<span class="gold">&amp;</span>V</span>
+        <span class="hero-logo-sub">Production</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════ PORTFOLIO ═══════════════════════════════ -->
+  <section id="portfolio" class="section">
+
+    <!-- Category Tabs (no All) -->
+    <div class="category-tabs reveal" id="category-tabs">
+      {% for cat in categories %}
+      <button class="tab-btn" data-category="{{ cat.id }}">{{ cat.label }}</button>
+      {% endfor %}
+    </div>
+
+    <!-- Category Detail Panel (featured video + description) -->
+    <div id="category-detail" class="category-detail hidden">
+      <div class="cd-video-wrap">
+        <img id="cd-hero-img" src="" alt="" style="width:100%;height:100%;object-fit:cover;" />
+      </div>
+      <div class="cd-info">
+        <p class="label" id="cd-label"></p>
+        <h3 class="cd-title" id="cd-category-name"></h3>
+        <div class="divider"></div>
+        <p class="cd-description" id="cd-description"></p>
+      </div>
+    </div>
+
+    <!-- Grid -->
+    <div class="portfolio-grid" id="portfolio-grid"></div>
+  </section>
+
+  <!-- ══════════════════════════ ART PRINTS STORE ═══════════════════════ -->
+  <section id="store-section" class="section">
+    <div class="section-header reveal" style="text-align:center;">
+      <p class="label">R&amp;V</p>
+      <h2 class="heading">R&amp;V Shop</h2>
+      <div class="divider center"></div>
+      <p class="store-sub reveal">Limited edition archival prints. Museum-quality giclée on premium paper.</p>
+    </div>
+    <div class="store-grid reveal" id="store-grid">
+      <!-- Populated by main.js -->
+    </div>
+  </section>
+
+  <!-- Store lightbox (slider: photo ↔ room mockup) -->
+  <div id="store-lightbox">
+    <span id="store-lb-close" onclick="closeStoreLightbox()">✕</span>
+    <div id="store-lb-inner">
+      <!-- Left: image slider -->
+      <div id="store-slider-wrap">
+        <button class="slider-arrow left" id="store-prev" onclick="storeSlide(-1)">&#8592;</button>
+        <div id="store-slides">
+          <div class="store-slide active" id="slide-photo"><img id="slb-photo" src="" alt="" /></div>
+          <div class="store-slide" id="slide-room"><img id="slb-room" src="" alt="in room" /></div>
+        </div>
+        <button class="slider-arrow right" id="store-next" onclick="storeSlide(1)">&#8594;</button>
+        <div id="store-dots">
+          <span class="dot active" onclick="storeGoTo(0)"></span>
+          <span class="dot" onclick="storeGoTo(1)"></span>
+        </div>
+      </div>
+      <!-- Right: info panel -->
+      <div id="store-info-panel">
+        <p class="label" id="slb-label">Fine Art Print</p>
+        <h3 id="slb-title"></h3>
+        <div class="lp-divider"></div>
+        <p id="slb-description"></p>
+        <div class="store-meta">
+          <div class="meta-row"><span class="meta-key">Resolution</span><span id="slb-resolution"></span></div>
+          </div>
+        </div>
+        <button class="btn-primary" style="margin-top:2rem;width:100%;"
+          onclick="closeStoreLightbox();openContactModal()">Enquire About This Print</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════ ABOUT ════════════════════════════════ -->
+  <section class="section">
+    <div id="about">
+      <div class="about-visual reveal">
+        <img id="about-img" src="{{ url_for('static', filename='images/about/portrait.jpg') }}" alt="Director portrait"
+          onerror="this.style.display='none'" />
+        <div class="about-accent"></div>
+      </div>
+      <div class="about-text">
+        <div class="section-header reveal">
+          <p class="label">About</p>
+          <h2 class="heading">The Director's Vision</h2>
+          <div class="divider"></div>
+        </div>
+        <p class="reveal">{{ config.about }}</p>
+        <div class="about-tags reveal">
+          {% for cat in categories %}
+          <span class="tag">{{ cat.label }}</span>
+          {% endfor %}
+        </div>
+        <button class="btn-primary reveal" style="align-self:flex-start;margin-top:1.5rem;"
+          onclick="openContactModal()">
+          Work With Us
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════ BRANDS SLIDER ══════════════════════════════ -->
+  <section id="brands-section">
+    <div class="brands-header reveal">
+      <p class="label" style="text-align:center;">Trusted By</p>
+    </div>
+    <div class="brands-slider-wrap">
+      <div class="brands-track" id="brands-track">
+        <!-- Populated by JS from static/images/collaborations/ -->
+        <!-- Placeholder shown if no logos uploaded yet -->
+        <div class="brand-placeholder" id="brands-placeholder">
+          <span>Add brand logos to <code>static/images/collaborations/</code></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════ CONTACT CTA ════════════════════════════════ -->
+  <section id="contact-cta" class="section">
+    <div class="cta-content reveal">
+      <p class="label">Let's Work Together</p>
+      <h2 class="heading">Have a project in mind?</h2>
+      <div class="divider center"></div>
+      <p class="cta-sub">We'd love to hear about it. Tell us about your vision and let's create something extraordinary.
+      </p>
+      <button class="btn-primary cta-btn" onclick="openContactModal()">Get in Touch</button>
+    </div>
+  </section>
+
+  <!-- ══════════════════════ CONTACT MODAL ══════════════════════════════ -->
+  <div id="contact-modal" class="modal-overlay" onclick="handleModalOutsideClick(event)">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeContactModal()">✕</button>
+      <div class="modal-header">
+        <p class="label">Contact</p>
+        <h2 class="heading">Let's Create Together</h2>
+        <div class="divider"></div>
+      </div>
+
+      <div class="modal-body">
+        <!-- Contact info -->
+        <div class="contact-info-col">
+          <p style="color:var(--muted); font-size:.95rem;">
+            Ready to elevate your brand? Reach out and we'll craft the perfect cinematic experience for you.
+          </p>
+          <div class="contact-items">
+            <div class="contact-item">
+              <div class="contact-icon">📧</div>
+              <a href="mailto:{{ config.email }}">{{ config.email }}</a>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon">📞</div>
+              <a href="tel:{{ config.phone }}">{{ config.phone }}</a>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon">📍</div>
+              <span>{{ config.location }}</span>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon">📸</div>
+              <a href="https://instagram.com/{{ config.instagram | replace('@','') }}" target="_blank">
+                {{ config.instagram }}
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form -->
+        <form class="contact-form" id="contact-form">
+          <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" placeholder="Your name" required />
+          </div>
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="your@email.com" required />
+          </div>
+          <div class="form-group">
+            <label for="service">Service</label>
+            <select id="service" name="service">
+              <option value="">Select a service…</option>
+              {% for cat in categories %}
+              <option value="{{ cat.id }}">{{ cat.label }}</option>
+              {% endfor %}
+              <option value="custom">Custom Project</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="budget">Budget Range</label>
+            <select id="budget" name="budget">
+              <option value="">Select budget…</option>
+              <option value="1500-3500">€1 500 – €3 500</option>
+              <option value="3500-8000">€3 500 – €8 000</option>
+              <option value="8000+">€8 000+</option>
+              <option value="custom">Let's discuss</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="message">Project Details</label>
+            <textarea id="message" name="message"
+              placeholder="Tell us about your project, timeline, and vision…"></textarea>
+          </div>
+          <button type="submit" class="btn-primary">Send Message ✉️</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════ FOOTER ══════════════════════════════════ -->
+  <footer>
+    <a href="#hero" class="footer-logo">R<span>&amp;</span>V Production</a>
+    <p>© 2024–2026 {{ config.name }}. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="#portfolio">Work</a>
+      <a href="#about">About</a>
+      <button onclick="openContactModal()"
+        style="background:none;border:none;color:var(--muted);font-size:.75rem;cursor:pointer;transition:color .4s;"
+        onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--muted)'">Contact</button>
+    </div>
+  </footer>
+
+  <!-- Lightbox -->
+  <div id="lightbox">
+    <span id="lightbox-close" onclick="closeLightbox()">✕</span>
+    <div id="lightbox-inner">
+      <img id="lightbox-img" src="" alt="" />
+      <video id="lightbox-vid" src="" muted controls loop
+        style="display:none;max-width:100%;max-height:88vh;border-radius:6px;outline:none;"></video>
+      <!-- Description panel shown alongside the video -->
+      <div id="lightbox-panel" style="display:none;">
+        <p class="label" id="lp-label"></p>
+        <div class="lp-divider"></div>
+        <p id="lp-description"></p>
+        <button class="btn-primary" style="margin-top:2rem;" onclick="closeLightbox();openContactModal()">Book This
+          Project</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast">Message sent — we'll be in touch soon!</div>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+
+</html>

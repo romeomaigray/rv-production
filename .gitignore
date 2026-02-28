@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+*.pyo
+.env
+.DS_Store
+*.mov
+*.MP4
+*.mp4
+*.mov
+*.MOV
+*.MP4
+*.mp4
+*.mov
+*.MOV
