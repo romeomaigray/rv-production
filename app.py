@@ -148,25 +148,25 @@ STORE = [
     {
         "id": "print-01",
         "title": "Espalmador Island",
-        "description": "A serene morning in the Alps captured moments before the sun broke through the clouds. The layers of mist and pine create a sense of infinite depth.",
+        "description": "A wide aerial view of Espalmador island where a pale sandbar curves into a sheltered turquoise bay. Small sailboats are anchored in the calm, shallow water, while darker reef patches and deeper blue tones surround the coast. On the seaward side, gentle waves break along rocky edges, and in the distance a chain of low mountains stretches across the horizon under a clear blue sky with a few soft clouds.",
         "resolution": "8064 × 4536 px",
     },
     {
         "id": "print-02",
         "title": "Circle Boat",
-        "description": "The Mediterranean at dusk — a photograph of stillness and warmth where the last light of the day dissolves into the sea.",
+        "description": "A dramatic top-down aerial shot of a speedboat carving a tight arc across dark, glassy water. The boat’s bright white wake forms a near-perfect circular swirl, creating a striking contrast against the deep navy sea. The surrounding water is smooth and minimal, making the curved trail of foam the central graphic element of the composition.",
         "resolution": "4000 × 3000 px",
     },
     {
         "id": "print-03",
         "title": "Wave Boat",
-        "description": "Aerial dunes of the Sahara at sunrise. Shot from above, the geometry of sand and shadow becomes pure abstract art.",
+        "description": "A striking top-down aerial view of a speedboat slicing through dark, calm water. The boat leaves a bright, foamy wake that curves in a long S-shape, like a ribbon drawn across the sea. The deep navy background and subtle light gradients make the pale trail stand out sharply, turning the motion into an abstract, graphic pattern.",
         "resolution": "4000 × 3000 px",
     },
     {
         "id": "print-04",
         "title": "The Surfer",
-        "description": "A dramatic Atlantic storm rolling over a rugged coastline. Raw power and beauty captured in a single frame.",
+        "description": "A minimalist top-down aerial shot of a lone person standing in shallow, pale-blue water, holding a board. The wet sand beneath the surface creates soft textures and flowing patterns, like ripples and brushstrokes. A long, sharp shadow stretches far across the frame, emphasizing the low sun and the sense of scale, solitude, and stillness in the scene.",
         "resolution": "4000 × 3000 px",
     },
 ]
